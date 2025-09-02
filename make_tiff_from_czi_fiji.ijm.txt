@@ -1,0 +1,42 @@
+// Указать путь к папке с изображениями
+inputFolder = "D:/Downloads/U87_SG_26022025/";
+outputFolder = "D:/Downloads/U87_SG_26022025/";
+
+// Получить список файлов в папке
+list = getFileList(inputFolder);
+
+// Проход по каждому файлу в папке
+for (i = 0; i < list.length; i++) {
+    // Проверить, является ли файл CZI
+    if (endsWith(list[i], ".czi")) {
+        // Открыть изображение
+        open(inputFolder + list[i]);
+
+        // Разделить изображение на каналы
+        run("Split Channels");
+
+        // Получить количество открытых окон (каналов)
+        nWindows = 3; // Получаем количество открытых окон
+        print("Number of channels found: " + nWindows);
+
+        // Сохранить каждый канал в отдельный файл
+        for (j = 1; j <= nWindows; j++) {
+            // Выберите окно с нужным номером канала
+            selectWindow("C" + j + "-" + inputFolder + list[i]); // Предполагается, что окна называются C1, C2 и т. д.
+            channelTitle = getTitle(); // Получаем название j-го открытого окна
+
+            // Сохранить текущий канал
+	    name = replace(list[i], ".czi", ""); // Удалить расширение .czi из имени
+            saveAs("Tiff", outputFolder + name + "_" + j + ".tif"); // Сохранить текущий канал
+            //close();
+            // Закрыть текущий канал
+            close(channelTitle); // Закрываем канал по имени
+        }
+
+        // Закрыть текущее изображение (если еще открыто)
+        close(); 
+    } else {
+        // Если файл не является CZI, игнорировать его
+        print(list[i] + " не является CZI файлом.");
+    }
+}
