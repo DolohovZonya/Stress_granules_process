@@ -28,7 +28,7 @@ channel_palette = {1: '#32CD32', 2: '#DC143C'}  # синий и оранжевы
 for channel in [1]:
     channel_data = df[df['channel'] == channel]
     sns.lineplot(data=channel_data, x='Group', y='total_particles',
-                 estimator='mean', errorbar='sd',
+                 estimator='mean', errorbar='se',
                  linewidth=2.5, marker='o', markersize=8,
                  color=channel_palette[channel],
                  label=f'{channel}',
